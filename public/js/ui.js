@@ -21,6 +21,7 @@ export const elements = {
   // Lobby Screen
   lobbyRoomCode: document.getElementById('lobby-room-code'),
   btnCopyCode: document.getElementById('btn-copy-code'),
+  btnCopyLink: document.getElementById('btn-copy-link'),
   lobbyPlayerCount: document.getElementById('lobby-player-count'),
   lobbyPlayersGrid: document.getElementById('lobby-players-grid'),
   btnLeaveLobby: document.getElementById('btn-leave-lobby'),

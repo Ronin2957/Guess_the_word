@@ -66,6 +66,9 @@ class GameApp {
     // 4. Initialize socket event listeners
     initSocketListeners(this.socket, this);
 
+    // 4b. Check if URL has a room code to auto-join (?room=XXXXXX)
+    this.checkUrlRoomCode();
+
     // 5. Build canvas color selectors
     buildColorPalette((color) => {
       this.canvas.setColor(color);
@@ -201,6 +204,14 @@ class GameApp {
       copyToClipboard(this.roomCode, 
         () => showToast('Room code copied to clipboard!', 'success'),
         () => showToast('Failed to copy room code.', 'error')
+      );
+    });
+
+    elements.btnCopyLink.addEventListener('click', () => {
+      const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${this.roomCode}`;
+      copyToClipboard(inviteUrl,
+        () => showToast('Invite link copied! Share it with friends.', 'success'),
+        () => showToast('Failed to copy invite link.', 'error')
       );
     });
 
@@ -378,6 +389,23 @@ class GameApp {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
+    }
+  }
+
+  /**
+   * Checks the URL for a ?room=XXXXXX query parameter.
+   * If found, auto-fills the room code input so the user just needs to click "Join".
+   */
+  checkUrlRoomCode() {
+    const params = new URLSearchParams(window.location.search);
+    const roomCode = params.get('room')?.toUpperCase();
+    if (roomCode && roomCode.length === 6) {
+      elements.inputRoomCode.value = roomCode;
+      showToast('Room code detected from invite link! Enter a username and click Join.', 'success');
+
+      // Clean the URL without reloading (remove the ?room= param)
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
     }
   }
 

@@ -427,6 +427,22 @@ input[type="text"]:focus, select:focus, textarea:focus {
   letter-spacing: 3px;
 }
 
+/* Invite Link Button */
+.btn-invite-link {
+  background: var(--accent-gradient) !important;
+  color: #fff !important;
+  border-color: var(--accent) !important;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.btn-invite-link:hover {
+  background: var(--accent-gradient) !important;
+  color: #fff !important;
+  border-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 106, 0.25);
+}
+
 .lobby-content {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
