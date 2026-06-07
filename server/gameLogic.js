@@ -53,6 +53,12 @@ export function startGame(room, io) {
  */
 export function startSelectionPhase(room, io) {
   clearRoomTimers(room);
+
+  // Guard: if only 1 player remains, end the game early
+  if (room.players.size < 2) {
+    endGameSolo(room, io);
+    return;
+  }
   
   room.gameState = 'selecting';
   room.currentDrawerId = room.drawerOrder[room.drawerIndex];
@@ -115,6 +121,12 @@ export function startSelectionPhase(room, io) {
  */
 export function startTurn(room, word, io) {
   clearRoomTimers(room);
+
+  // Guard: if only 1 player remains, end the game early
+  if (room.players.size < 2) {
+    endGameSolo(room, io);
+    return;
+  }
 
   room.gameState = 'drawing';
   room.currentWord = word.trim().toLowerCase();
@@ -331,6 +343,12 @@ export function endTurn(room, io, reason = 'time') {
  * @param {object} io 
  */
 export function nextTurn(room, io) {
+  // Guard: if only 1 player remains, end the game early
+  if (room.players.size < 2) {
+    endGameSolo(room, io);
+    return;
+  }
+
   room.drawerIndex++;
 
   // Check if round is complete
@@ -412,4 +430,21 @@ export function endGame(room, io) {
       }))
     });
   }, config.TIMING.gameOverDelay * 1000);
+}
+
+/**
+ * Ends the game early when only 1 player remains
+ * @param {object} room 
+ * @param {object} io 
+ */
+export function endGameSolo(room, io) {
+  clearRoomTimers(room);
+
+  // Notify remaining player(s) that the game ended due to insufficient players
+  io.to(room.code).emit('game_ended_solo', {
+    message: 'Game ended — not enough players to continue.'
+  });
+
+  // Trigger normal endGame flow for scoring and lobby reset
+  endGame(room, io);
 }

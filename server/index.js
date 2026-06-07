@@ -16,7 +16,9 @@ import {
   startGame, 
   handleGuess, 
   startTurn, 
-  endTurn 
+  endTurn,
+  nextTurn,
+  endGameSolo
 } from './gameLogic.js';
 import { filterProfanity } from './profanityFilter.js';
 
@@ -508,6 +510,17 @@ io.on('connection', (socket) => {
           text: `Host disconnected. ${newHost.username} is now the host.`,
           type: 'system'
         });
+      }
+
+      // Check if only 1 player remains during an active game — end the game
+      const activeStates = ['drawing', 'selecting', 'reveal', 'scoreboard'];
+      if (room.players.size < 2 && activeStates.includes(room.gameState)) {
+        io.to(room.code).emit('chat_message', {
+          sender: 'System',
+          text: 'All other players have left. The game will end now.',
+          type: 'system'
+        });
+        endGameSolo(room, io);
       }
     }
   }

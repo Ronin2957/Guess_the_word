@@ -311,6 +311,11 @@ export function initSocketListeners(socket, app) {
     }, 1000);
   });
 
+  socket.on('game_ended_solo', (data) => {
+    app.stopLocalTimer();
+    showToast(data.message || 'Game ended — not enough players.', 'error');
+  });
+
   socket.on('lobby_reset', (data) => {
     clearAllOverlays();
     app.gameState = 'lobby';

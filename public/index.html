@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sketch & Guess | Real-Time Multiplayer Drawing Game</title>
-  <!-- Google Fonts: Outfit & Inter for premium visual style -->
+  <title>Sketch Mayhem | Real-Time Multiplayer Drawing Game</title>
+  <!-- Google Fonts: Nunito & Patrick Hand for artistic style -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=1.4.1">
+  <link rel="stylesheet" href="css/style.css?v=2.0.0">
 </head>
 <body>
 
@@ -25,8 +25,9 @@
         
         <!-- Game Logo -->
         <header class="logo-header">
-          <h1>Sketch &amp; Guess</h1>
-          <p>Real-Time Multiplayer Drawing Game</p>
+          <div class="logo-icon">🎨</div>
+          <h1>Sketch Mayhem</h1>
+          <p>Draw, Guess & Have Fun Together</p>
         </header>
 
         <div class="home-content">
@@ -283,6 +284,13 @@
         <!-- Main Workspace Area -->
         <div class="game-workspace">
           
+          <!-- Mobile Tab Buttons (hidden on desktop) -->
+          <div class="mobile-tab-bar" id="mobile-tab-bar">
+            <button class="mobile-tab-btn active" data-tab="canvas" id="tab-canvas">🎨 Canvas</button>
+            <button class="mobile-tab-btn" data-tab="leaderboard" id="tab-leaderboard">🏆 Scores</button>
+            <button class="mobile-tab-btn" data-tab="chat" id="tab-chat">💬 Chat</button>
+          </div>
+
           <!-- Column 1: Live Leaderboard -->
           <aside class="game-leaderboard panel">
             <div class="leaderboard-list" id="game-leaderboard-list">
@@ -454,7 +462,7 @@
   <script src="/socket.io/socket.io.js"></script>
   
   <!-- Client scripts (modular imports) -->
-  <script type="module" src="js/app.js?v=1.4.1"></script>
+  <script type="module" src="js/app.js?v=2.0.0"></script>
 
 </body>
 </html>

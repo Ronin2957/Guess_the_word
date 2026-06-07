@@ -73,6 +73,56 @@ class GameApp {
 
     // 6. Bind interactive listeners
     this.bindEvents();
+
+    // 7. Setup mobile tab switching for game panels
+    this.bindMobileTabs();
+  }
+
+  /** 
+   * Binds mobile tab bar buttons to toggle between canvas, leaderboard, and chat panels
+   */
+  bindMobileTabs() {
+    const tabBar = document.getElementById('mobile-tab-bar');
+    if (!tabBar) return;
+
+    const tabBtns = tabBar.querySelectorAll('.mobile-tab-btn');
+    const canvasPanel = document.querySelector('.canvas-panel');
+    const leaderboardPanel = document.querySelector('.game-leaderboard');
+    const chatPanel = document.querySelector('.game-chat');
+
+    const panels = {
+      canvas: canvasPanel,
+      leaderboard: leaderboardPanel,
+      chat: chatPanel
+    };
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+
+        // Update active tab button
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/hide panels based on selected tab
+        Object.entries(panels).forEach(([key, panel]) => {
+          if (!panel) return;
+          if (key === targetTab) {
+            panel.classList.add('mobile-active');
+          } else {
+            panel.classList.remove('mobile-active');
+          }
+        });
+
+        // Resize canvas when switching back to canvas tab
+        if (targetTab === 'canvas' && this.canvas) {
+          setTimeout(() => this.canvas.resizeCanvas(), 50);
+        }
+      });
+    });
+
+    // Set canvas as initially active on mobile
+    if (canvasPanel) canvasPanel.classList.add('mobile-active');
   }
 
   renderAvatarPreview() {
