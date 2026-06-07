@@ -1,0 +1,19 @@
+{
+  "name": "guess-the-word-multiplayer",
+  "version": "1.0.0",
+  "description": "A production-ready real-time multiplayer drawing and guessing game.",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node server/tests/game.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": true
+}

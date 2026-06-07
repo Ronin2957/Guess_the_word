@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketch & Guess | Real-Time Multiplayer Drawing Game</title>
+  <!-- Google Fonts: Outfit & Inter for premium visual style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=1.4.1">
+</head>
+<body>
+
+  <!-- Game Wrapper -->
+  <div id="game-app">
+    
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- ==================== SCREEN 1: HOME SCREEN ==================== -->
+    <section id="screen-home" class="screen active">
+      <div class="home-container">
+        
+        <!-- Game Logo -->
+        <header class="logo-header">
+          <h1>Sketch &amp; Guess</h1>
+          <p>Real-Time Multiplayer Drawing Game</p>
+        </header>
+
+        <div class="home-content">
+          <!-- Left: Avatar Customizer -->
+          <div class="avatar-customizer-box panel">
+            <h3>Customize Avatar</h3>
+            <div id="home-avatar-preview" class="avatar-preview-large"></div>
+            
+            <div class="customizer-controls">
+              <!-- Skins -->
+              <div class="control-row">
+                <span>Skin</span>
+                <div class="arrow-select" data-option="skin">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">Option 1</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+
+              <!-- Backgrounds -->
+              <div class="control-row">
+                <span>Background</span>
+                <div class="arrow-select" data-option="bg">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">Option 1</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+
+              <!-- Eyes -->
+              <div class="control-row">
+                <span>Eyes</span>
+                <div class="arrow-select" data-option="eyes">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">Normal</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+
+              <!-- Mouth -->
+              <div class="control-row">
+                <span>Mouth</span>
+                <div class="arrow-select" data-option="mouth">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">Smile</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+
+              <!-- Style (Boy / Girl) -->
+              <div class="control-row">
+                <span>Style</span>
+                <div class="arrow-select" data-option="style">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">Boy</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+
+              <!-- Accessory -->
+              <div class="control-row">
+                <span>Accessory</span>
+                <div class="arrow-select" data-option="accessory">
+                  <button class="arrow-btn prev-btn">&lt;</button>
+                  <span class="option-label">None</span>
+                  <button class="arrow-btn next-btn">&gt;</button>
+                </div>
+              </div>
+            </div>
+
+            <button id="btn-randomize-avatar" class="btn btn-secondary btn-full">
+              Randomize Avatar 🎲
+            </button>
+          </div>
+
+          <!-- Right: Profile & Room Setup -->
+          <div class="join-setup-box panel">
+            <h3>Choose Profile</h3>
+            
+            <div class="form-group">
+              <label for="input-username">Your Nickname</label>
+              <input type="text" id="input-username" placeholder="Enter username..." maxlength="16" autocomplete="off">
+            </div>
+
+            <hr class="divider">
+
+            <div class="action-section">
+              <button id="btn-create-room" class="btn btn-primary btn-full">
+                Create Room 🏠
+              </button>
+              
+              <div class="or-separator"><span>OR</span></div>
+              
+              <div class="form-group">
+                <label for="input-room-code">Enter Room Code</label>
+                <div class="join-input-group">
+                  <input type="text" id="input-room-code" placeholder="6-Letter Code..." maxlength="6" autocomplete="off">
+                  <button id="btn-join-room" class="btn btn-accent">Join Game ⚡</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 2: LOBBY SCREEN ==================== -->
+    <section id="screen-lobby" class="screen">
+      <div class="lobby-container">
+        
+        <!-- Lobby Header -->
+        <header class="lobby-header">
+          <div class="room-code-banner">
+            <span>Room Code:</span>
+            <strong id="lobby-room-code">------</strong>
+            <button id="btn-copy-code" class="btn btn-icon" title="Copy Code">📋 Copy</button>
+          </div>
+          <h2>Game Lobby</h2>
+        </header>
+
+        <div class="lobby-content">
+          <!-- Left: Player Cards -->
+          <div class="lobby-players panel">
+            <div class="panel-header">
+              <h3>Players (<span id="lobby-player-count">0</span>/20)</h3>
+            </div>
+            <div id="lobby-players-grid" class="players-grid">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Right: Host Settings / Info Panel -->
+          <div class="lobby-settings panel">
+            <div class="panel-header">
+              <h3>Game Settings</h3>
+            </div>
+            
+            <form id="settings-form" class="settings-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="set-max-players">Max Players</label>
+                  <select id="set-max-players" class="setting-input">
+                    <option value="5">5 Players</option>
+                    <option value="10" selected>10 Players</option>
+                    <option value="15">15 Players</option>
+                    <option value="20">20 Players</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="set-rounds">Rounds</label>
+                  <select id="set-rounds" class="setting-input">
+                    <option value="1">1 Round</option>
+                    <option value="2">2 Rounds</option>
+                    <option value="3" selected>3 Rounds</option>
+                    <option value="5">5 Rounds</option>
+                    <option value="10">10 Rounds</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="set-draw-time">Draw Time (Seconds)</label>
+                  <select id="set-draw-time" class="setting-input">
+                    <option value="40">40s</option>
+                    <option value="60">60s</option>
+                    <option value="80" selected>80s</option>
+                    <option value="120">120s</option>
+                    <option value="180">180s</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="set-max-hints">Hints Per Turn</label>
+                  <select id="set-max-hints" class="setting-input">
+                    <option value="0">No Hints</option>
+                    <option value="1">1 Hint</option>
+                    <option value="2">2 Hints</option>
+                    <option value="3" selected>3 Hints</option>
+                    <option value="5">5 Hints</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="set-word-mode">Words List Mode</label>
+                <select id="set-word-mode" class="setting-input">
+                  <option value="default" selected>Default Words</option>
+                  <option value="custom">Custom Words Only</option>
+                  <option value="mixed">Mixed (Default + Custom)</option>
+                </select>
+              </div>
+
+              <div id="custom-words-section" class="form-group hidden">
+                <label for="set-custom-words">Custom Words (One word or phrase per line)</label>
+                <textarea id="set-custom-words" class="setting-input" rows="4" placeholder="Enter word list here..."></textarea>
+              </div>
+            </form>
+
+            <div class="settings-read-only hidden" id="settings-read-only-msg">
+              <p>Only the room host can edit settings.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lobby Footer Buttons -->
+        <footer class="lobby-footer">
+          <button id="btn-leave-lobby" class="btn btn-secondary">Leave Lobby 🚪</button>
+          
+          <div class="host-controls" id="host-start-block">
+            <button id="btn-start-game" class="btn btn-primary">Start Game 🚀</button>
+          </div>
+          <div class="player-controls" id="player-ready-block">
+            <button id="btn-toggle-ready" class="btn btn-primary">Ready Up Check ⬜</button>
+          </div>
+        </footer>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 3: GAMEPLAY SCREEN ==================== -->
+    <section id="screen-game" class="screen">
+      <div class="game-container-grid">
+        
+        <!-- Game Top Bar -->
+        <header class="game-header-bar">
+          <div class="header-left">
+            <span id="game-round-info">Round 1/3</span>
+          </div>
+
+          <!-- Secret Word or Clues -->
+          <div class="header-center">
+            <div id="word-display-container">
+              <!-- Will display blanks e.g. _ A _ _ E -->
+              <div id="game-word-letters" class="word-letters">_ _ _ _</div>
+              <div id="game-word-hint-meta" class="hint-meta">(4 letters, 3 hints remaining)</div>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <!-- Timer widget -->
+            <div class="timer-widget">
+              <svg class="timer-ring" width="50" height="50">
+                <circle class="timer-ring-bg" cx="25" cy="25" r="21" fill="none" stroke-width="4"/>
+                <circle id="timer-ring-progress" class="timer-ring-progress" cx="25" cy="25" r="21" fill="none" stroke-width="4"/>
+              </svg>
+              <div id="timer-text" class="timer-text">80</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <div class="game-workspace">
+          
+          <!-- Column 1: Live Leaderboard -->
+          <aside class="game-leaderboard panel">
+            <div class="leaderboard-list" id="game-leaderboard-list">
+              <!-- Loaded dynamically -->
+            </div>
+          </aside>
+
+          <!-- Column 2: Drawing Canvas + floating tools -->
+          <main class="canvas-panel panel">
+            <div class="canvas-container">
+              <canvas id="game-canvas"></canvas>
+            </div>
+            
+            <!-- Drawing tools toolbar (hidden for guessers) -->
+            <div id="canvas-toolbar" class="canvas-toolbar">
+              <!-- Color list -->
+              <div class="color-palette-scroller">
+                <div id="canvas-color-palette" class="color-palette-grid">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+
+              <div class="toolbar-divider"></div>
+
+              <!-- Sizes list -->
+              <div class="brush-size-group">
+                <button class="size-btn active" data-size="3" title="Small"><span class="dot d-s"></span></button>
+                <button class="size-btn" data-size="6" title="Medium"><span class="dot d-m"></span></button>
+                <button class="size-btn" data-size="12" title="Large"><span class="dot d-l"></span></button>
+                <button class="size-btn" data-size="20" title="Extra Large"><span class="dot d-xl"></span></button>
+              </div>
+
+              <div class="toolbar-divider"></div>
+
+              <!-- Action buttons -->
+              <div class="canvas-actions">
+                <button id="tool-fill" class="btn-tool" title="Fill / Bucket">🪣</button>
+                <button id="tool-eraser" class="btn-tool" title="Eraser">🧽</button>
+                <button id="tool-undo" class="btn-tool" title="Undo">↩️</button>
+                <button id="tool-clear" class="btn-tool" title="Clear Canvas">🗑️</button>
+              </div>
+            </div>
+          </main>
+
+          <!-- Column 3: Live Chat / Guessing Panel -->
+          <aside class="game-chat panel">
+            <div class="chat-header">
+              <h3>Game Chat</h3>
+            </div>
+            
+            <div id="chat-messages-log" class="chat-log">
+              <!-- Chat logs, system notices, guesses -->
+            </div>
+            
+            <form id="chat-form" class="chat-form">
+              <input type="text" id="chat-input" placeholder="Type your guess or message..." maxlength="100" autocomplete="off">
+              <button type="submit" id="btn-chat-send" class="btn btn-accent">Send</button>
+            </form>
+          </aside>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== GAME OVERLAY DIALOGS ==================== -->
+    
+    <!-- 1. Word Picker Overlay (Drawer only) -->
+    <div id="overlay-word-picker" class="overlay-modal">
+      <div class="overlay-content panel">
+        <h2>Choose a Word to Draw</h2>
+        <p>You have <strong id="word-picker-countdown">15</strong> seconds to select:</p>
+        
+        <div id="word-choices-grid" class="choices-grid">
+          <!-- Choice buttons dynamically loaded -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Choosing Wait Overlay (Guessers only) -->
+    <div id="overlay-choosing-wait" class="overlay-modal">
+      <div class="overlay-content panel text-center">
+        <div class="pulse-loader"></div>
+        <h2 id="wait-overlay-title">Drawer is choosing a word...</h2>
+        <p>Prepare your brushes!</p>
+      </div>
+    </div>
+
+    <!-- 3. Turn Reveal Overlay -->
+    <div id="overlay-turn-reveal" class="overlay-modal">
+      <div class="overlay-content panel text-center">
+        <h2 id="reveal-title-status">Turn Finished!</h2>
+        <p>The correct word was:</p>
+        <h1 id="reveal-secret-word" class="highlight-word">APPLE</h1>
+        
+        <div class="scores-summary">
+          <h3>Points gained:</h3>
+          <ul id="reveal-scores-list" class="scores-delta-list">
+            <!-- Loaded dynamically -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Round Summary Overlay -->
+    <div id="overlay-round-end" class="overlay-modal">
+      <div class="overlay-content panel">
+        <h2 class="text-center">Round Finished!</h2>
+        <p class="text-center">Current Leaderboard Position:</p>
+        
+        <div class="round-scoreboard-list" id="round-scoreboard-display">
+          <!-- Leaderboard summary list -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Final Game Over Overlay -->
+    <div id="overlay-game-over" class="overlay-modal">
+      <div class="overlay-content panel game-over-panel">
+        <header class="game-over-header text-center">
+          <h1>🏆 Game Over 🏆</h1>
+          <p>We have our champions!</p>
+        </header>
+
+        <!-- Podium section (Vibrant UX highlight) -->
+        <div class="podium-container">
+          <!-- 2nd place -->
+          <div class="podium-place place-2">
+            <div id="podium-avatar-2" class="podium-avatar"></div>
+            <div class="place-tag">2nd</div>
+            <div id="podium-name-2" class="podium-name">Player B</div>
+            <div id="podium-score-2" class="podium-score">0 pts</div>
+          </div>
+
+          <!-- 1st place -->
+          <div class="podium-place place-1">
+            <div id="podium-avatar-1" class="podium-avatar">🏆</div>
+            <div class="place-tag">1st</div>
+            <div id="podium-name-1" class="podium-name">Player A</div>
+            <div id="podium-score-1" class="podium-score">0 pts</div>
+          </div>
+
+          <!-- 3rd place -->
+          <div class="podium-place place-3">
+            <div id="podium-avatar-3" class="podium-avatar"></div>
+            <div class="place-tag">3rd</div>
+            <div id="podium-name-3" class="podium-name">Player C</div>
+            <div id="podium-score-3" class="podium-score">0 pts</div>
+          </div>
+        </div>
+
+        <!-- Standard listing of the rest -->
+        <div class="game-over-ranks-scroller">
+          <ul id="game-over-ranks-list" class="ranks-list">
+            <!-- Players positions 4+ -->
+          </ul>
+        </div>
+
+        <div class="footer-note text-center">
+          <p>Returning to Lobby in <strong id="game-over-countdown">15</strong> seconds...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Socket.io connection library (provided by local server) -->
+  <script src="/socket.io/socket.io.js"></script>
+  
+  <!-- Client scripts (modular imports) -->
+  <script type="module" src="js/app.js?v=1.4.1"></script>
+
+</body>
+</html>
