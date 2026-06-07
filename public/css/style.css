@@ -397,6 +397,8 @@ input[type="text"]:focus, select:focus, textarea:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 12px;
   border-bottom: 1.5px solid var(--border-color);
   padding-bottom: 10px;
@@ -409,7 +411,8 @@ input[type="text"]:focus, select:focus, textarea:focus {
 .room-code-banner {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
   background-color: var(--bg-card-alt);
   border: 1.5px solid var(--border-color);
   padding: 8px 16px;
